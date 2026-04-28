@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_loan_report" model="ir.actions.report">
+        <field name="name">Loan Report</field>
+        <field name="model">loan.management</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">customer_loan.loan_report_template</field>
+        <field name="report_file">customer_loan.loan_report_template</field>
+        <field name="binding_model_id" ref="model_loan_management"/>
+        <field name="binding_type">report</field>
+    </record>
+</odoo>

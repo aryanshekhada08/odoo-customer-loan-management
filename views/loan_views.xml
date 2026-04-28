@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- LIST VIEW -->
+    <record id="view_loan_list" model="ir.ui.view">
+        <field name="name">loan.list</field>
+        <field name="model">loan.management</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="loan_no"/>
+                <field name="loan_type_id"/>
+                <field name="customer_id"/>
+                <field name="amount"/>
+                <field name="interest"/>
+                <field name="duration"/>
+                <field name="emi"/>
+                <field name="total_amount"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+            <!-- SEARCH VIEW -->
+        <record id="view_loan_search" model="ir.ui.view">
+            <field name="name">loan.search</field>
+            <field name="model">loan.management</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="customer_id"/>
+                    <field name="loan_type_id"/>
+                    <field name="state"/>
+                    <filter string="Draft"
+                            name="draft"
+                            domain="[('state','=','draft')]"/>
+                    <filter string="Running"
+                            name="running"
+                            domain="[('state','=','running')]"/>
+                    <filter string="Done"
+                            name="done"
+                            domain="[('state','=','done')]"/>
+                    <separator/>
+                    <filter string="Group By Customer"
+                            name="group_customer"
+                            context="{'group_by':'customer_id'}"/>
+                    <filter string="Group By Loan Type"
+                            name="group_loan_type"
+                            context="{'group_by':'loan_type_id'}"/>
+                </search>
+            </field>
+        </record>
+    <!-- FORM VIEW -->
+    <record id="view_loan_form" model="ir.ui.view">
+        <field name="name">loan.form</field>
+        <field name="model">loan.management</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <!-- HEADER -->
+                    <header>
+                        <button name="action_approve"
+                                string="Approve"
+                                type="object"
+                                class="btn-primary"
+                                invisible="state != 'draft'"/>
+                        <button name="action_mark_paid"
+                                string="Close Loan"
+                                type="object"
+                                class="btn-success"
+                                invisible="state != 'running'"/>
+                        <button name="%(action_loan_report)d"
+                                string="Print Report"
+                                type="action"
+                                class="btn-primary"/>
+                        <field name="state" widget="statusbar"/>
+                    </header>
+                    <!-- BASIC -->
+                    <group>
+                        <group>
+                            <field name="loan_no" readonly="1"/>
+                            <field name="loan_type_id"/>
+                            <field name="customer_id"/>
+                        </group>
+                        <group>
+                            <field name="amount" readonly="state != 'draft'"/>
+                            <field name="interest" readonly="state != 'draft'"/>
+                            <field name="duration" readonly="state != 'draft'"/>
+                            <field name="document_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+
+                    <!-- CALCULATED -->
+                    <group>
+                        <field name="emi" readonly="1"/>
+                        <field name="total_amount" readonly="1"/>
+                    </group>
+                    <!-- ADDRESS -->
+                    <group string="Customer Address">
+                        <field name="street" readonly="1"/>
+                        <field name="city" readonly="1"/>
+                        <field name="state_id" readonly="1"/>
+                        <field name="country_id" readonly="1"/>
+                        <field name="zip" readonly="1"/>
+                    </group>
+                    <!-- INSTALLMENTS -->
+                    <notebook>
+                        <page string="Installments">
+                            <field name="installment_ids" readonly="state == 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence"/>
+                                    <field name="due_date"/>
+                                    <field name="amount"/>
+                                    <field name="paid_amount"/>
+                                    <field name="due_amount"/>
+                                    <field name="state" readonly="1"/>
+                                    <field name="payment_date"/>
+                                    <button name="action_pay"
+                                            type="object"
+                                            string="Pay"
+                                            class="btn-success"
+                                            invisible="state == 'paid'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <!-- ACTION -->
+    <record id="loan_action" model="ir.actions.act_window">
+        <field name="name">Loans</field>
+        <field name="res_model">loan.management</field>
+        <field name="view_mode">kanban,list,form,graph</field>
+        <field name="search_view_id" ref="view_loan_search"/>
+    </record>
+            <record id="view_loan_kanban" model="ir.ui.view">
+                <field name="name">loan.kanban</field>
+                <field name="model">loan.management</field>
+                <field name="arch" type="xml">
+                    <kanban>
+                        <field name="loan_type_id"/>
+                        <field name="customer_id"/>
+                        <field name="amount"/>
+                        <field name="state"/>
+                        <templates>
+                            <t t-name="card">
+                                <div class="oe_kanban_global_click p-3 border rounded">
+                                    <strong>
+                                        <field name="loan_type_id"/>
+                                    </strong>
+                                    <div>
+                                        Customer:
+                                        <field name="customer_id"/>
+                                    </div>
+                                    <div>
+                                        Amount:
+                                        <field name="amount"/>
+                                    </div>
+                                    <div>
+                                        Status:
+                                        <field name="state"/>
+                                    </div>
+                                </div>
+                            </t>
+                        </templates>
+                    </kanban>
+                </field>
+            </record>
+        <!-- GRAPH VIEW -->
+        <record id="view_loan_graph" model="ir.ui.view">
+            <field name="name">loan.graph</field>
+            <field name="model">loan.management</field>
+            <field name="arch" type="xml">
+                <graph string="Loan Analysis" type="bar">
+                    <!-- X AXIS -->
+                    <field name="loan_type_id"/>
+                    <!-- MEASURE -->
+                    <field name="amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+    <!-- MENU -->
+    <menuitem id="loan_main_menu" name="Loan Management"/>
+    <menuitem id="loan_sub_menu"
+              name="Loans"
+              parent="loan_main_menu"
+              action="loan_action"/>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+
+    <record id="view_payment_wizard_form" model="ir.ui.view">
+
+        <field name="name">loan.payment.wizard.form</field>
+
+        <field name="model">loan.payment.wizard</field>
+
+        <field name="arch" type="xml">
+
+            <form string="Pay Installment">
+
+                <group>
+
+                    <field name="installment_id" readonly="1"/>
+
+                    <field name="amount"/>
+
+                    <field name="payment_date"/>
+
+                    <field name="payment_method"/>
+
+                    <field name="note"/>
+
+                </group>
+
+                <footer>
+
+                    <button name="action_confirm_payment"
+                            string="Confirm"
+                            type="object"
+                            class="btn-primary"/>
+
+                    <button string="Cancel"
+                            special="cancel"/>
+
+                </footer>
+
+            </form>
+
+        </field>
+
+    </record>
+
+</odoo>
