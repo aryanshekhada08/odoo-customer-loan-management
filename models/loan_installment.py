@@ -21,6 +21,46 @@ class LoanInstallment(models.Model):
 
     payment_date = fields.Date()
 
+    def _has_customer_email(self):
+        self.ensure_one()
+        return bool(self.loan_id.customer_id.email)
+
+    def _send_payment_received_email(self, force_send=True):
+        template = self.env.ref(
+            'customer_loan.email_template_installment_paid',
+            raise_if_not_found=False,
+        )
+        if not template:
+            return False
+        mail_ids = []
+        for installment in self:
+            if not installment._has_customer_email():
+                continue
+            mail_ids.append(template.send_mail(
+                installment.id,
+                force_send=force_send,
+                email_layout_xmlid='mail.mail_notification_light',
+            ))
+        return mail_ids
+
+    def _send_reminder_email(self, force_send=True):
+        template = self.env.ref(
+            'customer_loan.email_template_installment_reminder',
+            raise_if_not_found=False,
+        )
+        if not template:
+            return False
+        mail_ids = []
+        for installment in self:
+            if not installment._has_customer_email():
+                continue
+            mail_ids.append(template.send_mail(
+                installment.id,
+                force_send=force_send,
+                email_layout_xmlid='mail.mail_notification_light',
+            ))
+        return mail_ids
+
     def action_pay(self):
         if not self.env.user.has_group('customer_loan.group_loan_admin'):
             raise UserError("Only a Loan Admin can record installment payments.")
@@ -49,12 +89,5 @@ class LoanInstallment(models.Model):
             ('due_date', '=', tomorrow),
             ('state', '!=', 'paid')
         ])
-        template = self.env.ref(
-            'customer_loan.email_template_installment_reminder'
-        )
-        for rec in installments:
-            template.send_mail(
-                rec.id,
-                force_send=True
-            )
+        installments._send_reminder_email(force_send=True)
         return True

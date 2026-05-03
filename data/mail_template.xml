@@ -1,15 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="email_template_installment_paid1" model="mail.template">
-        <field name="name">Installment Paid Mail</field>
+    <record id="email_template_installment_paid" model="mail.template">
+        <field name="name">Loan Installment Payment Received</field>
         <field name="model_id" ref="customer_loan.model_loan_installment"/>
-        <field name="subject">Installment Payment Successful</field>
-        <field name="email_from">aryanshekhada30@gmail.com</field>
-        <field name="email_to">kemcho3344@gmail.com</field>
+        <field name="subject">Payment received for loan {{ object.loan_id.loan_no or '' }}</field>
+        <field name="email_from">{{ object.loan_id.user_id.email_formatted or object.env.company.email_formatted or user.email_formatted }}</field>
+        <field name="partner_to">{{ object.loan_id.customer_id.id }}</field>
+        <field name="use_default_to" eval="False"/>
+        <field name="auto_delete" eval="False"/>
         <field name="body_html" type="html">
             <div style="margin: 0px; padding: 0px;">
-                <p style="margin: 0px; padding: 0px; font-size: 12px;">
-                    </p>
+                <p>Hello <t t-out="object.loan_id.customer_id.name or 'Customer'"/>,</p>
+                <p>Your installment payment has been recorded.</p>
+                <p>
+                    <strong>Loan:</strong>
+                    <t t-out="object.loan_id.loan_no or ''"/>
+                    <br/>
+                    <strong>Installment:</strong>
+                    <t t-out="object.sequence or ''"/>
+                    <br/>
+                    <strong>Paid Amount:</strong>
+                    <t t-out="object.paid_amount or 0.0"/>
+                    <br/>
+                    <strong>Due Amount:</strong>
+                    <t t-out="object.due_amount or 0.0"/>
+                </p>
             </div>
         </field>
     </record>

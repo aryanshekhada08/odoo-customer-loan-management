@@ -126,15 +126,8 @@ class LoanPaymentWizard(models.TransientModel):
                 'state': 'partial',
             })
 
+        installment._send_payment_received_email(force_send=True)
 
-    
-        # template = self.env.ref(
-        #     'customer_loan.email_template_installment_paid'
-        # )
-        # mail_id = template.send_mail(
-        #     self.installment_id.id,
-        #     # force_send=True
-        # )
-        # return {
-        #     'type': 'ir.actions.act_window_close'
-        # }
+        return {
+            'type': 'ir.actions.act_window_close'
+        }
