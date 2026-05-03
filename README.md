@@ -192,4 +192,4 @@ customer_loan/
 
 ## Author
 
-Aryan
+Aryan Shekhada
