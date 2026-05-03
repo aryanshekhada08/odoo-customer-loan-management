@@ -15,7 +15,8 @@
                         <br/>
                         <strong>Total Amount:</strong>
                         <span t-field="o.amount"/>
-                        <br/><br/>
+                        <br/>
+                        <br/>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -27,7 +28,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr t-foreach="o.installment_ids"  t-as="inst">
+                                <tr t-foreach="o.installment_ids" t-as="inst">
                                     <td>
                                         <span t-field="inst.due_date"/>
                                     </td>

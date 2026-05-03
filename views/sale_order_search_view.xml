@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_order_search_inherit_agent_orders" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.agent.orders</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <!-- Add new filter -->
+            <xpath expr="//search"
+                   position="inside">
+                <filter name="my_agent_orders"
+                        string="My Agent Orders"
+                        domain="[('agent_id', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_search_inherit_agent_quotations" model="ir.ui.view">
+        <field name="name">sale.order.search.inherit.agent.quotations</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <filter name="my_agent_orders"
+                        string="My Agent Orders"
+                        domain="[('agent_id', '=', uid)]"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

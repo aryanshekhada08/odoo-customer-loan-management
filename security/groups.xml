@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PRIVILEGE CATEGORY -->
+    <record id="privilege_loan_management" model="res.groups.privilege">
+        <field name="name">Loan Management</field>
+        <field name="sequence">1</field>
+    </record>
+    <!-- USER GROUP -->
+    <record id="group_loan_user" model="res.groups">
+        <field name="name">Loan User</field>
+        <field name="sequence">10</field>
+        <field name="privilege_id" ref="privilege_loan_management"/>
+        <field name="comment">Can create and view their own loans.</field>
+    </record>
+    <!-- ADMIN GROUP -->
+    <record id="group_loan_admin" model="res.groups">
+        <field name="name">Loan Admin</field>
+        <field name="sequence">20</field>
+        <field name="privilege_id" ref="privilege_loan_management"/>
+        <field name="implied_ids" eval="[(4, ref('group_loan_user'))]"/>
+        <field name="comment">Can manage all loans, installments, documents, and loan types.</field>
+    </record>
+
+    <!-- Simple login behavior:
+         Internal users get the loan user side.
+         Settings/Admin users get the loan admin side. -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('customer_loan.group_loan_user'))]"/>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('customer_loan.group_loan_admin'))]"/>
+    </record>
+</odoo>

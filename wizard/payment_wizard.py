@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 class LoanPaymentWizard(models.TransientModel):
 
@@ -23,18 +23,27 @@ class LoanPaymentWizard(models.TransientModel):
         res = super().default_get(fields_list)
         active_id = self.env.context.get(
             'active_id'
-        )
+        ) or self.env.context.get('default_installment_id')
         installment = self.env[
             'loan.installment'
         ].browse(active_id)
-        res['installment_id'] = installment.id
-        res['amount'] = installment.due_amount
+        if installment:
+            res['installment_id'] = installment.id
+            res['amount'] = installment.due_amount
         return res
 
     def action_confirm_payment(self):
+        if not self.env.user.has_group('customer_loan.group_loan_admin'):
+            raise UserError("Only a Loan Admin can confirm payments.")
 
         installment = self.installment_id
         payment_amount = self.amount
+
+        if not installment:
+            raise ValidationError("Please select an installment.")
+        if payment_amount <= 0:
+            raise ValidationError("Payment amount must be greater than zero.")
+
         current_due = installment.due_amount
        
         if payment_amount == current_due:

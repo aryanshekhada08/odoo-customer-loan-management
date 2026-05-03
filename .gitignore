@@ -1,0 +1,20 @@
+# Python generated files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Odoo runtime/local files
+*.log
+*.pid
+*.pot
+
+# Local editor and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# AI/tooling workspace files
+.codex/
+AGENTS.md
+GRAPH.md

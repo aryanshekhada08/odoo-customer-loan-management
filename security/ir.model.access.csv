@@ -1,6 +1,10 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_loan_management,loan.management,model_loan_management,,1,1,1,1
-access_loan_installment,loan.installment,model_loan_installment,,1,1,1,1
-access_loan_document,loan.document,model_loan_document,,1,1,1,1
-access_loan_type,loan.type,model_loan_type,,1,1,1,1
-access_loan_payment_wizard,loan.payment.wizard,model_loan_payment_wizard,,1,1,1,1
+access_loan_management_user,loan.management.user,model_loan_management,customer_loan.group_loan_user,1,1,1,1
+access_loan_management_admin,loan.management.admin,model_loan_management,customer_loan.group_loan_admin,1,1,1,1
+access_loan_installment_user,loan.installment.user,model_loan_installment,customer_loan.group_loan_user,1,0,0,0
+access_loan_installment_admin,loan.installment.admin,model_loan_installment,customer_loan.group_loan_admin,1,1,1,1
+access_loan_document_user,loan.document.user,model_loan_document,customer_loan.group_loan_user,1,0,0,0
+access_loan_document_admin,loan.document.admin,model_loan_document,customer_loan.group_loan_admin,1,1,1,1
+access_loan_type_user,loan.type.user,model_loan_type,customer_loan.group_loan_user,1,0,0,0
+access_loan_type_admin,loan.type.admin,model_loan_type,customer_loan.group_loan_admin,1,1,1,1
+access_loan_payment_wizard_admin,loan.payment.wizard.admin,model_loan_payment_wizard,customer_loan.group_loan_admin,1,1,1,1
